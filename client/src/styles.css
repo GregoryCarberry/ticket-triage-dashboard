@@ -22,3 +22,44 @@ th, td {
 th {
   text-align: left;
 }
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  align-items: end;
+  margin: 1rem 0 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 160px;
+}
+
+.filter.grow {
+  flex: 1;
+  min-width: 220px;
+}
+
+select, input {
+  background: #0b1220;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.5rem 0.6rem;
+  outline: none;
+}
+
+select:focus, input:focus {
+  border-color: #38bdf8;
+}
+
+.muted {
+  color: #94a3b8;
+}
+
+.error {
+  color: #fca5a5;
+}
