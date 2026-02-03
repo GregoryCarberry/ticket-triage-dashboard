@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { getTickets } from './api'
+import { getTickets, getMetrics } from './api'
 import TicketTable from './components/TicketTable'
 import TicketFilters from './components/TicketFilters'
+import MetricsBar from './components/MetricsBar'
 
 export default function App() {
   const [tickets, setTickets] = useState([])
@@ -10,6 +11,7 @@ export default function App() {
   const [q, setQ] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [metrics, setMetrics] = useState(null)
 
   useEffect(() => {
     let cancelled = false
@@ -17,9 +19,17 @@ export default function App() {
     async function load() {
       setLoading(true)
       setError('')
+
       try {
-        const data = await getTickets({ status, priority, q })
-        if (!cancelled) setTickets(data)
+        const [data, m] = await Promise.all([
+          getTickets({ status, priority, q }),
+          getMetrics()
+        ])
+
+        if (!cancelled) {
+          setTickets(data)
+          setMetrics(m)
+        }
       } catch (e) {
         if (!cancelled) setError(e.message || 'Failed to load tickets')
       } finally {
@@ -37,9 +47,20 @@ export default function App() {
     if (Object.prototype.hasOwnProperty.call(next, 'q')) setQ(next.q)
   }
 
+  async function refreshMetrics() {
+    try {
+      const m = await getMetrics()
+      setMetrics(m)
+    } catch {
+      // Don't break the UI if metrics fails
+    }
+  }
+
   return (
     <div className="container">
       <h1>Ticket Triage Dashboard</h1>
+
+      <MetricsBar metrics={metrics} />
 
       <TicketFilters
         status={status}
@@ -51,13 +72,13 @@ export default function App() {
       {loading && <p className="muted">Loading…</p>}
       {error && <p className="error">{error}</p>}
 
-<TicketTable
-  tickets={tickets}
-  onTicketUpdated={(updated) => {
-    setTickets(prev => prev.map(t => (t.id === updated.id ? updated : t)))
-  }}
-/>
-
+      <TicketTable
+        tickets={tickets}
+        onTicketUpdated={(updated) => {
+          setTickets(prev => prev.map(t => (t.id === updated.id ? updated : t)))
+          refreshMetrics()
+        }}
+      />
     </div>
   )
 }

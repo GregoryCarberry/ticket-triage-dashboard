@@ -45,3 +45,11 @@ export async function updateTicketAssignee(id, assignee) {
 
   return res.json()
 }
+
+export async function getMetrics() {
+  const res = await fetch(`${API_URL}/metrics`)
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status}`)
+  }
+  return res.json()
+}

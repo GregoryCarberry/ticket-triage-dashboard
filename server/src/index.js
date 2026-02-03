@@ -67,6 +67,18 @@ app.patch('/tickets/:id', (req, res) => {
   res.json(ticket)
 })
 
+app.get('/metrics', (req, res) => {
+  const metrics = {
+    total: tickets.length,
+    new: tickets.filter(t => t.status === 'New').length,
+    inProgress: tickets.filter(t => t.status === 'In Progress').length,
+    resolved: tickets.filter(t => t.status === 'Resolved').length,
+    highPriority: tickets.filter(t => t.priority === 'High').length
+  }
+
+  res.json(metrics)
+})
+
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
