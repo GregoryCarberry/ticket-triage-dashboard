@@ -1,8 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { readFileSync } from 'fs'
-import { writeFileSync } from 'fs'
-
+import { readFileSync, writeFileSync } from 'fs'
 
 const app = express()
 app.use(cors())
@@ -38,23 +36,29 @@ app.get('/tickets', (req, res) => {
 
 app.patch('/tickets/:id', (req, res) => {
   const { id } = req.params
-  const { status } = req.body
-
-  const allowedStatuses = ['New', 'In Progress', 'Resolved']
-
-  if (!allowedStatuses.includes(status)) {
-    return res.status(400).json({ error: 'Invalid status value' })
-  }
+  const { status, assignee } = req.body
 
   const ticket = tickets.find(t => t.id === id)
-
   if (!ticket) {
     return res.status(404).json({ error: 'Ticket not found' })
   }
 
-  ticket.status = status
+  const allowedStatuses = ['New', 'In Progress', 'Resolved']
 
-  // persist to file
+  if (typeof status !== 'undefined') {
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status value' })
+    }
+    ticket.status = status
+  }
+
+  if (typeof assignee !== 'undefined') {
+    if (typeof assignee !== 'string') {
+      return res.status(400).json({ error: 'Invalid assignee value' })
+    }
+    ticket.assignee = assignee
+  }
+
   writeFileSync(
     new URL('../data/tickets.json', import.meta.url),
     JSON.stringify(tickets, null, 2)
@@ -63,6 +67,8 @@ app.patch('/tickets/:id', (req, res) => {
   res.json(ticket)
 })
 
-app.listen(3000, () => {
-  console.log('API running on http://localhost:3000')
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+  console.log(`API running on http://localhost:${PORT}`)
 })

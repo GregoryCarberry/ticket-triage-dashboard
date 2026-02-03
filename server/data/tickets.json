@@ -1,21 +1,23 @@
-
 [
   {
     "id": "INC-1001",
     "title": "VPN not connecting",
     "priority": "High",
-    "status": "New"
+    "status": "New",
+    "assignee": ""
   },
   {
     "id": "INC-1002",
     "title": "Email sync issue",
     "priority": "Medium",
-    "status": "In Progress"
+    "status": "In Progress",
+    "assignee": "Gregory"
   },
   {
     "id": "INC-1003",
     "title": "Laptop won't boot",
     "priority": "High",
-    "status": "Resolved"
+    "status": "Resolved",
+    "assignee": "Gregory"
   }
 ]

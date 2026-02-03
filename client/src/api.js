@@ -30,3 +30,18 @@ export async function updateTicketStatus(id, status) {
 
   return res.json()
 }
+
+export async function updateTicketAssignee(id, assignee) {
+  const res = await fetch(`${API_URL}/tickets/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ assignee })
+  })
+
+  if (!res.ok) {
+    const msg = await res.text()
+    throw new Error(msg || `API error: ${res.status}`)
+  }
+
+  return res.json()
+}

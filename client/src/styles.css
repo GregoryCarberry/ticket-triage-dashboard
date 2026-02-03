@@ -63,3 +63,21 @@ select:focus, input:focus {
 .error {
   color: #fca5a5;
 }
+
+.btn {
+  background: #111827;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: #38bdf8;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
