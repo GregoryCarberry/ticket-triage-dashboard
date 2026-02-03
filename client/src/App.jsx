@@ -51,7 +51,13 @@ export default function App() {
       {loading && <p className="muted">Loading…</p>}
       {error && <p className="error">{error}</p>}
 
-      <TicketTable tickets={tickets} />
+<TicketTable
+  tickets={tickets}
+  onTicketUpdated={(updated) => {
+    setTickets(prev => prev.map(t => (t.id === updated.id ? updated : t)))
+  }}
+/>
+
     </div>
   )
 }
