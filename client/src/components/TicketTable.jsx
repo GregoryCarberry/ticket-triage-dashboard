@@ -8,14 +8,21 @@ export default function TicketTable({ tickets, onTicketUpdated }) {
   const [savingId, setSavingId] = useState('')
   const [error, setError] = useState('')
 
-  async function handleStatusChange(ticketId, nextStatus) {
+  async function handleStatusChange(ticket, nextStatus) {
+    const prevStatus = ticket.status
+
+    // Optimistic update (instant UI change)
     setError('')
-    setSavingId(ticketId)
+    setSavingId(ticket.id)
+    onTicketUpdated({ ...ticket, status: nextStatus })
 
     try {
-      const updated = await updateTicketStatus(ticketId, nextStatus)
+      const updated = await updateTicketStatus(ticket.id, nextStatus)
+      // Ensure UI matches server response
       onTicketUpdated(updated)
     } catch (e) {
+      // Rollback on failure
+      onTicketUpdated({ ...ticket, status: prevStatus })
       setError(e.message || 'Failed to update status')
     } finally {
       setSavingId('')
@@ -49,7 +56,7 @@ export default function TicketTable({ tickets, onTicketUpdated }) {
                 <select
                   value={t.status}
                   disabled={savingId === t.id}
-                  onChange={(e) => handleStatusChange(t.id, e.target.value)}
+                  onChange={(e) => handleStatusChange(t, e.target.value)}
                 >
                   {STATUSES.map(s => (
                     <option key={s} value={s}>{s}</option>
