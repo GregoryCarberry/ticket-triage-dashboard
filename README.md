@@ -1,24 +1,22 @@
 # 🎫 Ticket Triage Dashboard (React + REST API)
 
 A **full-stack service desk–style ticket triage application** built with **React** and a **RESTful Node.js API**.  
-This project demonstrates **realistic first-line IT support workflows**, clean client–server separation, and API-driven state management.
+This project demonstrates **realistic first-line IT support workflows**, including filtering, status updates, self‑assignment, and live operational metrics.
 
-> **Focus:** Practical support operations — prioritisation, status tracking, and clear data flow — rather than UI gimmicks.
+> **Focus:** Practical support operations and clean API-driven state, rather than UI gimmicks.
 
 ---
 
 ## 🧩 Overview
 
-**Goal:**  
-Build a lightweight but realistic ticket triage system similar to what’s used in internal IT service desks and MSP environments.
+The goal of this project is to model the **core experience of a first-line service desk**:
 
-The application allows support agents to:
-- View incoming tickets
-- See priority and status at a glance
-- Consume ticket data from a REST API
-- Extend easily into create/update workflows
+- Incoming tickets are easy to scan and prioritise
+- Status changes are fast and reliable
+- Agents can self‑assign work
+- Managers (or agents) can see live workload metrics at a glance
 
-This project is intentionally **framework-light**, readable, and fork-friendly.
+The application is intentionally lightweight, readable, and easy to extend.
 
 ---
 
@@ -32,79 +30,39 @@ React (Vite)
 REST API (Node.js + Express)
    │
    ▼
-JSON Data Store
+JSON-backed data store
 ```
 
-- The **frontend** is a standalone React application
-- The **backend** exposes a REST API (`/tickets`)
-- No shared state between client/server
-- Designed so the data layer can later be swapped for a real database
-
----
-
-## 📁 Project Structure
-
-```
-ticket-triage-dashboard/
-├── client/
-│   ├── index.html
-│   ├── vite.config.js
-│   ├── package.json
-│   └── src/
-│       ├── App.jsx
-│       ├── main.jsx
-│       ├── api.js
-│       ├── styles.css
-│       └── components/
-│           ├── TicketTable.jsx
-│           └── StatusBadge.jsx
-│
-├── server/
-│   ├── package.json
-│   ├── data/
-│   │   └── tickets.json
-│   └── src/
-│       └── index.js
-│
-├── .gitignore
-└── README.md
-```
+- Frontend and backend are **fully decoupled**
+- All state changes flow through REST endpoints
+- Data storage can be swapped for a database without altering the UI
 
 ---
 
 ## 🚀 Key Features
 
-### 🧑‍💻 Frontend (React)
-- React 18 with functional components and hooks
-- Data fetched from a live REST API
-- Ticket table with:
-  - ID
-  - Title
-  - Priority
-  - Status badges
-- Clean, readable UI with minimal styling
+### Ticket Triage
+- View tickets with priority and status indicators
+- Filter by status, priority, or free‑text search
+- Designed for rapid scanning and decision‑making
 
-### 🔌 Backend (REST API)
-- Node.js + Express
-- CORS enabled for local development
-- REST endpoint:
-  - `GET /tickets`
-- JSON-backed data store for simplicity and clarity
+### Status Management
+- Inline status updates (*New → In Progress → Resolved*)
+- **Optimistic UI updates** with rollback on API failure
+- Changes persist via REST API
 
----
+### Assignment Workflow
+- “Assign to me” action for first‑line agents
+- Assignee persisted server‑side
+- Mirrors common service desk ownership patterns
 
-## 🔍 Example API Response
-
-```json
-[
-  {
-    "id": "INC-1001",
-    "title": "VPN not connecting",
-    "priority": "High",
-    "status": "New"
-  }
-]
-```
+### Metrics Dashboard
+- Live summary of:
+  - Total tickets
+  - Open tickets
+  - New / In‑progress tickets
+  - High‑priority tickets
+- Backed by a dedicated `/metrics` API endpoint
 
 ---
 
@@ -116,80 +74,52 @@ ticket-triage-dashboard/
 | Backend | Node.js, Express |
 | API Style | REST |
 | Data Store | JSON (file-based) |
-| Tooling | npm, Git, GitHub |
+| Tooling | Git, GitHub, npm |
 
 ---
 
 ## ▶️ Running Locally
 
-### 1️⃣ Start the API server
+### API Server
 ```bash
 cd server
 npm install
 npm start
 ```
+Runs on `http://localhost:3000`
 
-Runs on:
-```
-http://localhost:3000
-```
-
----
-
-### 2️⃣ Start the React client
+### React Client
 ```bash
 cd client
 npm install
 npm run dev
 ```
-
-Open:
-```
-http://localhost:5173
-```
-
-The dashboard will load ticket data from the REST API automatically.
+Open `http://localhost:5173`
 
 ---
 
 ## 🧠 Design Decisions
 
-- **No database**: keeps focus on API contracts and frontend logic  
-- **No auth (yet)**: scope kept intentionally tight for clarity  
-- **Explicit separation** between client and server folders  
-- **Readable code first** — optimised for learning and review  
-
-This mirrors real-world internal tools, where clarity often matters more than novelty.
-
----
-
-## 🧪 Extension Ideas
-
-This project is designed to grow naturally into:
-
-- `POST /tickets` (create tickets)
-- `PATCH /tickets/:id` (status updates)
-- Filtering & search (priority, status, SLA)
-- Role-based access (agent vs admin)
-- Database backing (SQLite / PostgreSQL)
-- Metrics endpoint (`/metrics`) for dashboards
+- **No database**: keeps focus on API contracts and UI logic
+- **No authentication** (yet): scope kept intentionally tight
+- **Optimistic UI patterns**: reflects modern, responsive internal tools
+- **Readable code first**: prioritises maintainability over cleverness
 
 ---
 
 ## 📌 Why This Project Exists
 
-This project demonstrates:
-- Understanding of **RESTful APIs**
-- Practical **first-line IT support workflows**
-- Real-world React usage (not a toy counter app)
-- Clean project structure suitable for team environments
+This project demonstrates how common **service desk concepts** translate into clean, maintainable code:
 
-It is intentionally aligned with **IT support, service desk, and junior engineering roles**.
+- API‑driven state management
+- Incremental feature development
+- Clear separation of concerns
+- Practical workflows aligned with real IT support environments
 
 ---
 
 ## 👤 Author
 
 **Gregory John Carberry**  
-- GitHub: https://github.com/GregoryCarberry  
-- LinkedIn: https://www.linkedin.com/in/gregory-carberry  
+GitHub: https://github.com/GregoryCarberry  
+LinkedIn: https://www.linkedin.com/in/gregory-carberry  
