@@ -43,20 +43,62 @@ app.patch('/tickets/:id', (req, res) => {
     return res.status(404).json({ error: 'Ticket not found' })
   }
 
+  if (!Array.isArray(ticket.notes)) ticket.notes = []
+
   const allowedStatuses = ['New', 'In Progress', 'Resolved']
 
+  const changes = []
+
+  // Status change
   if (typeof status !== 'undefined') {
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({ error: 'Invalid status value' })
     }
-    ticket.status = status
+
+    if (ticket.status !== status) {
+      changes.push({
+        type: 'status',
+        from: ticket.status,
+        to: status
+      })
+      ticket.status = status
+    }
   }
 
+  // Assignee change
   if (typeof assignee !== 'undefined') {
     if (typeof assignee !== 'string') {
       return res.status(400).json({ error: 'Invalid assignee value' })
     }
-    ticket.assignee = assignee
+
+    const prev = ticket.assignee || ''
+    const next = assignee
+
+    if (prev !== next) {
+      changes.push({
+        type: 'assignee',
+        from: prev || 'Unassigned',
+        to: next || 'Unassigned'
+      })
+      ticket.assignee = next
+    }
+  }
+
+  // Create system notes for changes
+  const now = new Date().toISOString()
+
+  for (const c of changes) {
+    const text =
+      c.type === 'status'
+        ? `Status changed from "${c.from}" → "${c.to}"`
+        : `Assignee changed from "${c.from}" → "${c.to}"`
+
+    ticket.notes.unshift({
+      id: `sys_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+      text,
+      author: 'System',
+      createdAt: now
+    })
   }
 
   writeFileSync(
