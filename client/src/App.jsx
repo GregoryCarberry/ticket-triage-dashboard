@@ -3,6 +3,9 @@ import { getTickets, getMetrics } from './api'
 import TicketTable from './components/TicketTable'
 import TicketFilters from './components/TicketFilters'
 import MetricsBar from './components/MetricsBar'
+import TicketDrawer from './components/TicketDrawer'
+
+
 
 export default function App() {
   const [tickets, setTickets] = useState([])
@@ -12,6 +15,7 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [metrics, setMetrics] = useState(null)
+  const [openTicketId, setOpenTicketId] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -73,12 +77,23 @@ export default function App() {
       {error && <p className="error">{error}</p>}
 
       <TicketTable
-        tickets={tickets}
-        onTicketUpdated={(updated) => {
-          setTickets(prev => prev.map(t => (t.id === updated.id ? updated : t)))
-          refreshMetrics()
-        }}
-      />
+  tickets={tickets}
+  onOpenTicket={(id) => setOpenTicketId(id)}
+  onTicketUpdated={(updated) => {
+    setTickets(prev => prev.map(t => (t.id === updated.id ? updated : t)))
+    refreshMetrics()
+  }}
+/>
+
+
+      <TicketDrawer
+  ticketId={openTicketId}
+  onClose={() => setOpenTicketId('')}
+  onTicketPatched={(patched) => {
+    setTickets(prev => prev.map(t => (t.id === patched.id ? patched : t)))
+  }}
+/>
+
     </div>
   )
 }

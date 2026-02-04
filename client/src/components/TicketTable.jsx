@@ -8,7 +8,7 @@ const STATUSES = ['New', 'In Progress', 'Resolved']
 // Later you can swap this to real auth (JWT) or a settings field.
 const CURRENT_AGENT = 'Gregory'
 
-export default function TicketTable({ tickets, onTicketUpdated }) {
+export default function TicketTable({ tickets, onTicketUpdated, onOpenTicket }) {
   const [savingId, setSavingId] = useState('')
   const [error, setError] = useState('')
 
@@ -73,7 +73,9 @@ export default function TicketTable({ tickets, onTicketUpdated }) {
 
         <tbody>
           {tickets.map((t) => (
-            <tr key={t.id}>
+            <tr key={t.id}
+              className="row-click"
+              onClick={() => onOpenTicket(t.id)}>
               <td>{t.id}</td>
               <td>{t.title}</td>
               <td>{t.priority}</td>
@@ -82,6 +84,7 @@ export default function TicketTable({ tickets, onTicketUpdated }) {
 
               <td>
                 <select
+                  onClick={(e) => e.stopPropagation()}
                   value={t.status}
                   disabled={savingId === t.id}
                   onChange={(e) => handleStatusChange(t, e.target.value)}
@@ -100,9 +103,10 @@ export default function TicketTable({ tickets, onTicketUpdated }) {
 
               <td>
                 <button
+                  onClick={(e) => { e.stopPropagation(); handleAssignToMe(t) }}
                   className="btn"
                   disabled={savingId === t.id || t.assignee === CURRENT_AGENT}
-                  onClick={() => handleAssignToMe(t)}
+                  // onClick={() => handleAssignToMe(t)}
                 >
                   Assign to me
                 </button>

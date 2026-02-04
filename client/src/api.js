@@ -53,3 +53,24 @@ export async function getMetrics() {
   }
   return res.json()
 }
+
+export async function getTicket(id) {
+  const res = await fetch(`${API_URL}/tickets/${encodeURIComponent(id)}`)
+  if (!res.ok) throw new Error(`API error: ${res.status}`)
+  return res.json()
+}
+
+export async function addTicketNote(id, { text, author }) {
+  const res = await fetch(`${API_URL}/tickets/${encodeURIComponent(id)}/notes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, author })
+  })
+
+  if (!res.ok) {
+    const msg = await res.text()
+    throw new Error(msg || `API error: ${res.status}`)
+  }
+
+  return res.json()
+}
