@@ -3,10 +3,10 @@ export default function MetricsBar({ metrics }) {
 
   const items = [
     { label: 'Total', value: metrics.total },
-    { label: 'Open', value: (metrics.new + metrics.inProgress) },
+    { label: 'Open', value: metrics.new + metrics.inProgress },
     { label: 'New', value: metrics.new },
     { label: 'In Progress', value: metrics.inProgress },
-    { label: 'High Priority', value: metrics.highPriority }
+    { label: 'High Priority', value: metrics.highPriority },
   ]
 
   return (

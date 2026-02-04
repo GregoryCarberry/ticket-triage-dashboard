@@ -20,7 +20,7 @@ export async function updateTicketStatus(id, status) {
   const res = await fetch(`${API_URL}/tickets/${encodeURIComponent(id)}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status })
+    body: JSON.stringify({ status }),
   })
 
   if (!res.ok) {
@@ -35,7 +35,7 @@ export async function updateTicketAssignee(id, assignee) {
   const res = await fetch(`${API_URL}/tickets/${encodeURIComponent(id)}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ assignee })
+    body: JSON.stringify({ assignee }),
   })
 
   if (!res.ok) {
@@ -64,7 +64,7 @@ export async function addTicketNote(id, { text, author }) {
   const res = await fetch(`${API_URL}/tickets/${encodeURIComponent(id)}/notes`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text, author })
+    body: JSON.stringify({ text, author }),
   })
 
   if (!res.ok) {

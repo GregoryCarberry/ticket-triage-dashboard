@@ -1,3 +1,6 @@
+// File-based storage is used intentionally to keep focus on API behaviour.
+// This can be replaced with a database without changing the API contract.
+
 import express from 'express'
 import cors from 'cors'
 import { readFileSync, writeFileSync } from 'fs'
@@ -6,9 +9,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const tickets = JSON.parse(
-  readFileSync(new URL('../data/tickets.json', import.meta.url))
-)
+const tickets = JSON.parse(readFileSync(new URL('../data/tickets.json', import.meta.url)))
 
 app.get('/tickets', (req, res) => {
   const { status, priority, q } = req.query
@@ -16,18 +17,17 @@ app.get('/tickets', (req, res) => {
   let results = tickets
 
   if (status) {
-    results = results.filter(t => t.status.toLowerCase() === String(status).toLowerCase())
+    results = results.filter((t) => t.status.toLowerCase() === String(status).toLowerCase())
   }
 
   if (priority) {
-    results = results.filter(t => t.priority.toLowerCase() === String(priority).toLowerCase())
+    results = results.filter((t) => t.priority.toLowerCase() === String(priority).toLowerCase())
   }
 
   if (q) {
     const query = String(q).toLowerCase()
-    results = results.filter(t =>
-      t.id.toLowerCase().includes(query) ||
-      t.title.toLowerCase().includes(query)
+    results = results.filter(
+      (t) => t.id.toLowerCase().includes(query) || t.title.toLowerCase().includes(query)
     )
   }
 
@@ -38,7 +38,7 @@ app.patch('/tickets/:id', (req, res) => {
   const { id } = req.params
   const { status, assignee } = req.body
 
-  const ticket = tickets.find(t => t.id === id)
+  const ticket = tickets.find((t) => t.id === id)
   if (!ticket) {
     return res.status(404).json({ error: 'Ticket not found' })
   }
@@ -59,7 +59,7 @@ app.patch('/tickets/:id', (req, res) => {
       changes.push({
         type: 'status',
         from: ticket.status,
-        to: status
+        to: status,
       })
       ticket.status = status
     }
@@ -78,7 +78,7 @@ app.patch('/tickets/:id', (req, res) => {
       changes.push({
         type: 'assignee',
         from: prev || 'Unassigned',
-        to: next || 'Unassigned'
+        to: next || 'Unassigned',
       })
       ticket.assignee = next
     }
@@ -97,14 +97,11 @@ app.patch('/tickets/:id', (req, res) => {
       id: `sys_${Date.now()}_${Math.random().toString(16).slice(2)}`,
       text,
       author: 'System',
-      createdAt: now
+      createdAt: now,
     })
   }
 
-  writeFileSync(
-    new URL('../data/tickets.json', import.meta.url),
-    JSON.stringify(tickets, null, 2)
-  )
+  writeFileSync(new URL('../data/tickets.json', import.meta.url), JSON.stringify(tickets, null, 2))
 
   res.json(ticket)
 })
@@ -112,10 +109,10 @@ app.patch('/tickets/:id', (req, res) => {
 app.get('/metrics', (req, res) => {
   const metrics = {
     total: tickets.length,
-    new: tickets.filter(t => t.status === 'New').length,
-    inProgress: tickets.filter(t => t.status === 'In Progress').length,
-    resolved: tickets.filter(t => t.status === 'Resolved').length,
-    highPriority: tickets.filter(t => t.priority === 'High').length
+    new: tickets.filter((t) => t.status === 'New').length,
+    inProgress: tickets.filter((t) => t.status === 'In Progress').length,
+    resolved: tickets.filter((t) => t.status === 'Resolved').length,
+    highPriority: tickets.filter((t) => t.priority === 'High').length,
   }
 
   res.json(metrics)
@@ -123,7 +120,7 @@ app.get('/metrics', (req, res) => {
 
 app.get('/tickets/:id', (req, res) => {
   const { id } = req.params
-  const ticket = tickets.find(t => t.id === id)
+  const ticket = tickets.find((t) => t.id === id)
 
   if (!ticket) return res.status(404).json({ error: 'Ticket not found' })
   res.json(ticket)
@@ -137,7 +134,7 @@ app.post('/tickets/:id/notes', (req, res) => {
     return res.status(400).json({ error: 'Note text is required' })
   }
 
-  const ticket = tickets.find(t => t.id === id)
+  const ticket = tickets.find((t) => t.id === id)
   if (!ticket) return res.status(404).json({ error: 'Ticket not found' })
 
   if (!Array.isArray(ticket.notes)) ticket.notes = []
@@ -146,15 +143,12 @@ app.post('/tickets/:id/notes', (req, res) => {
     id: `note_${Date.now()}`,
     text: text.trim(),
     author: typeof author === 'string' ? author.trim() : 'System',
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   }
 
   ticket.notes.unshift(note)
 
-  writeFileSync(
-    new URL('../data/tickets.json', import.meta.url),
-    JSON.stringify(tickets, null, 2)
-  )
+  writeFileSync(new URL('../data/tickets.json', import.meta.url), JSON.stringify(tickets, null, 2))
 
   res.status(201).json(note)
 })

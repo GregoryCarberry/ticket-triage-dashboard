@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
+
 import { getTickets, getMetrics } from './api'
 import TicketTable from './components/TicketTable'
 import TicketFilters from './components/TicketFilters'
 import MetricsBar from './components/MetricsBar'
 import TicketDrawer from './components/TicketDrawer'
-
-
 
 export default function App() {
   const [tickets, setTickets] = useState([])
@@ -25,10 +24,7 @@ export default function App() {
       setError('')
 
       try {
-        const [data, m] = await Promise.all([
-          getTickets({ status, priority, q }),
-          getMetrics()
-        ])
+        const [data, m] = await Promise.all([getTickets({ status, priority, q }), getMetrics()])
 
         if (!cancelled) {
           setTickets(data)
@@ -42,7 +38,9 @@ export default function App() {
     }
 
     load()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [status, priority, q])
 
   function handleFilterChange(next) {
@@ -66,34 +64,27 @@ export default function App() {
 
       <MetricsBar metrics={metrics} />
 
-      <TicketFilters
-        status={status}
-        priority={priority}
-        q={q}
-        onChange={handleFilterChange}
-      />
+      <TicketFilters status={status} priority={priority} q={q} onChange={handleFilterChange} />
 
       {loading && <p className="muted">Loading…</p>}
       {error && <p className="error">{error}</p>}
 
       <TicketTable
-  tickets={tickets}
-  onOpenTicket={(id) => setOpenTicketId(id)}
-  onTicketUpdated={(updated) => {
-    setTickets(prev => prev.map(t => (t.id === updated.id ? updated : t)))
-    refreshMetrics()
-  }}
-/>
-
+        tickets={tickets}
+        onOpenTicket={(id) => setOpenTicketId(id)}
+        onTicketUpdated={(updated) => {
+          setTickets((prev) => prev.map((t) => (t.id === updated.id ? updated : t)))
+          refreshMetrics()
+        }}
+      />
 
       <TicketDrawer
-  ticketId={openTicketId}
-  onClose={() => setOpenTicketId('')}
-  onTicketPatched={(patched) => {
-    setTickets(prev => prev.map(t => (t.id === patched.id ? patched : t)))
-  }}
-/>
-
+        ticketId={openTicketId}
+        onClose={() => setOpenTicketId('')}
+        onTicketPatched={(patched) => {
+          setTickets((prev) => prev.map((t) => (t.id === patched.id ? patched : t)))
+        }}
+      />
     </div>
   )
 }

@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
+
 import { addTicketNote, getTicket } from '../api'
+
 import StatusBadge from './StatusBadge'
 
+// Authentication is intentionally omitted to keep the demo focused on
+// service desk workflows rather than access control.
 const CURRENT_AGENT = 'Gregory'
 
 export default function TicketDrawer({ ticketId, onClose, onTicketPatched }) {
@@ -30,7 +34,9 @@ export default function TicketDrawer({ ticketId, onClose, onTicketPatched }) {
     }
 
     load()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [ticketId])
 
   async function submitNote(e) {
@@ -72,7 +78,9 @@ export default function TicketDrawer({ ticketId, onClose, onTicketPatched }) {
             )}
           </div>
 
-          <button className="btn" onClick={onClose}>Close</button>
+          <button className="btn" onClick={onClose}>
+            Close
+          </button>
         </div>
 
         {loading && <p className="muted">Loading…</p>}
@@ -103,7 +111,7 @@ export default function TicketDrawer({ ticketId, onClose, onTicketPatched }) {
                 {(ticket.notes || []).length === 0 ? (
                   <p className="muted">No notes yet.</p>
                 ) : (
-                  ticket.notes.map(n => (
+                  ticket.notes.map((n) => (
                     <div key={n.id} className="note">
                       <div className="note-meta">
                         <strong>{n.author || 'System'}</strong>

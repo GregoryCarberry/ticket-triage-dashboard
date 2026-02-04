@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import StatusBadge from './StatusBadge'
+
 import { updateTicketStatus, updateTicketAssignee } from '../api'
+
+import StatusBadge from './StatusBadge'
 
 const STATUSES = ['New', 'In Progress', 'Resolved']
 
@@ -73,13 +75,13 @@ export default function TicketTable({ tickets, onTicketUpdated, onOpenTicket }) 
 
         <tbody>
           {tickets.map((t) => (
-            <tr key={t.id}
-              className="row-click"
-              onClick={() => onOpenTicket(t.id)}>
+            <tr key={t.id} className="row-click" onClick={() => onOpenTicket(t.id)}>
               <td>{t.id}</td>
               <td>{t.title}</td>
               <td>{t.priority}</td>
-              <td><StatusBadge status={t.status} /></td>
+              <td>
+                <StatusBadge status={t.status} />
+              </td>
               <td>{t.assignee ? t.assignee : 'Unassigned'}</td>
 
               <td>
@@ -90,7 +92,9 @@ export default function TicketTable({ tickets, onTicketUpdated, onOpenTicket }) 
                   onChange={(e) => handleStatusChange(t, e.target.value)}
                 >
                   {STATUSES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
                   ))}
                 </select>
 
@@ -103,7 +107,10 @@ export default function TicketTable({ tickets, onTicketUpdated, onOpenTicket }) 
 
               <td>
                 <button
-                  onClick={(e) => { e.stopPropagation(); handleAssignToMe(t) }}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleAssignToMe(t)
+                  }}
                   className="btn"
                   disabled={savingId === t.id || t.assignee === CURRENT_AGENT}
                   // onClick={() => handleAssignToMe(t)}
