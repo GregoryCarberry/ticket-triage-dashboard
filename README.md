@@ -1,20 +1,20 @@
-# 🎫 Ticket Triage Dashboard (React + REST API)
+# 🎫 Ticket Triage Dashboard
 
-A **full-stack service desk–style ticket triage application** built with **React** and a **RESTful Node.js API**.  
-This project demonstrates **realistic first-line IT support workflows**, including filtering, status updates, self‑assignment, and live operational metrics.
+A **full-stack service desk–style ticket triage application** built with **React** and a **RESTful Node.js API**.
 
-> **Focus:** Practical support operations and clean API-driven state, rather than UI gimmicks.
+This project demonstrates **realistic first-line IT support workflows**, including ticket filtering, status updates, self-assignment, activity notes, and live operational metrics — all driven by a clean REST API.
 
 ---
 
 ## 🧩 Overview
 
-The goal of this project is to model the **core experience of a first-line service desk**:
+The Ticket Triage Dashboard models the **core day-to-day experience of a first-line service desk**:
 
 - Incoming tickets are easy to scan and prioritise
 - Status changes are fast and reliable
-- Agents can self‑assign work
-- Managers (or agents) can see live workload metrics at a glance
+- Agents can self-assign work
+- All actions are logged in a ticket activity timeline
+- Live metrics provide instant operational visibility
 
 The application is intentionally lightweight, readable, and easy to extend.
 
@@ -35,41 +35,49 @@ JSON-backed data store
 
 - Frontend and backend are **fully decoupled**
 - All state changes flow through REST endpoints
-- Data storage can be swapped for a database without altering the UI
+- Data storage can be swapped for a database later without changing the UI
 
 ---
 
 ## 🚀 Key Features
 
-### Ticket Triage
+### 🎯 Ticket Triage
 - View tickets with priority and status indicators
-- Filter by status, priority, or free‑text search
-- Designed for rapid scanning and decision‑making
+- Filter tickets by status, priority, or free-text search
+- Designed for rapid scanning and decision-making
 
-### Status Management
+### 🔄 Status Management
 - Inline status updates (*New → In Progress → Resolved*)
 - **Optimistic UI updates** with rollback on API failure
-- Changes persist via REST API
+- Status changes persisted via REST API
 
-### Assignment Workflow
-- “Assign to me” action for first‑line agents
-- Assignee persisted server‑side
+### 👤 Assignment Workflow
+- “Assign to me” action for first-line agents
+- Ownership persisted server-side
 - Mirrors common service desk ownership patterns
 
-### Metrics Dashboard
+### 📝 Notes & Activity Timeline
+- Per-ticket notes visible in a dedicated details drawer
+- Manual notes added by agents
+- **System-generated activity events** logged automatically for:
+  - Status changes
+  - Assignee changes
+- Creates a clear audit trail of ticket activity
+
+### 📊 Metrics Dashboard
 - Live summary of:
   - Total tickets
   - Open tickets
-  - New / In‑progress tickets
-  - High‑priority tickets
-- Backed by a dedicated `/metrics` API endpoint
+  - New / In-progress tickets
+  - High-priority tickets
+- Powered by a dedicated `/metrics` API endpoint
 
 ---
 
 ## ⚙️ Tech Stack
 
 | Layer | Technology |
-|---|---|
+|-----|-----------|
 | Frontend | React, Vite, JavaScript |
 | Backend | Node.js, Express |
 | API Style | REST |
@@ -100,10 +108,11 @@ Open `http://localhost:5173`
 
 ## 🧠 Design Decisions
 
-- **No database**: keeps focus on API contracts and UI logic
-- **No authentication** (yet): scope kept intentionally tight
-- **Optimistic UI patterns**: reflects modern, responsive internal tools
-- **Readable code first**: prioritises maintainability over cleverness
+- **File-based storage** keeps the focus on API behaviour and UI logic
+- **No authentication (yet)** to keep scope tight and readable
+- **Optimistic UI patterns** reflect modern internal tooling
+- **System events logged server-side** to ensure consistency
+- Prioritised **clarity and maintainability** over unnecessary abstraction
 
 ---
 
@@ -111,10 +120,22 @@ Open `http://localhost:5173`
 
 This project demonstrates how common **service desk concepts** translate into clean, maintainable code:
 
-- API‑driven state management
+- API-driven state management
 - Incremental feature development
 - Clear separation of concerns
-- Practical workflows aligned with real IT support environments
+- Realistic workflows aligned with IT support environments
+
+It is intentionally aligned with **IT Support, Service Desk, and Junior Engineering roles**, rather than being a purely academic demo.
+
+---
+
+## 🔮 Future Enhancements
+
+- Role-based reassignment and escalation
+- Ticket activity filtering
+- Database persistence (SQLite / PostgreSQL)
+- Authentication and user management
+- Reporting and SLA indicators
 
 ---
 
@@ -122,4 +143,4 @@ This project demonstrates how common **service desk concepts** translate into cl
 
 **Gregory John Carberry**  
 GitHub: https://github.com/GregoryCarberry  
-LinkedIn: https://www.linkedin.com/in/gregory-carberry  
+LinkedIn: https://www.linkedin.com/in/gregory-carberry
