@@ -4,20 +4,30 @@
     "title": "VPN not connecting",
     "priority": "High",
     "status": "New",
-    "assignee": ""
+    "assignee": "",
+    "notes": [
+      {
+        "id": "note_1770238699818",
+        "text": "User reports issue started after password reset",
+        "author": "Gregory",
+        "createdAt": "2026-02-04T20:58:19.818Z"
+      }
+    ]
   },
   {
     "id": "INC-1002",
     "title": "Email sync issue",
     "priority": "Medium",
     "status": "In Progress",
-    "assignee": "Gregory"
+    "assignee": "Gregory",
+    "notes": []
   },
   {
     "id": "INC-1003",
     "title": "Laptop won't boot",
     "priority": "High",
     "status": "Resolved",
-    "assignee": "Gregory"
+    "assignee": "",
+    "notes": []
   }
 ]

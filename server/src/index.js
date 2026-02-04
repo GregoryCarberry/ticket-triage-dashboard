@@ -79,6 +79,44 @@ app.get('/metrics', (req, res) => {
   res.json(metrics)
 })
 
+app.get('/tickets/:id', (req, res) => {
+  const { id } = req.params
+  const ticket = tickets.find(t => t.id === id)
+
+  if (!ticket) return res.status(404).json({ error: 'Ticket not found' })
+  res.json(ticket)
+})
+
+app.post('/tickets/:id/notes', (req, res) => {
+  const { id } = req.params
+  const { text, author } = req.body
+
+  if (!text || typeof text !== 'string') {
+    return res.status(400).json({ error: 'Note text is required' })
+  }
+
+  const ticket = tickets.find(t => t.id === id)
+  if (!ticket) return res.status(404).json({ error: 'Ticket not found' })
+
+  if (!Array.isArray(ticket.notes)) ticket.notes = []
+
+  const note = {
+    id: `note_${Date.now()}`,
+    text: text.trim(),
+    author: typeof author === 'string' ? author.trim() : 'System',
+    createdAt: new Date().toISOString()
+  }
+
+  ticket.notes.unshift(note)
+
+  writeFileSync(
+    new URL('../data/tickets.json', import.meta.url),
+    JSON.stringify(tickets, null, 2)
+  )
+
+  res.status(201).json(note)
+})
+
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
